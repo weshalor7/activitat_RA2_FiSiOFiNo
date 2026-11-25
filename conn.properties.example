@@ -1,0 +1,4 @@
+DB_URL=jdbc:postgresql://localhost:5432/fisiofino_app
+DB_USER=fisiofino
+DB_PASSWORD=la_teva_contrasenya
+DB_MAX_POOL=4

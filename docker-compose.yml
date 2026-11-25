@@ -1,0 +1,31 @@
+# Dues bases de dades PostgreSQL independents: una per a l'aplicació i una només per als tests.
+# Arrencar: docker compose up -d      Aturar: docker compose down
+# Esborrar també les dades de l'app: docker compose down -v
+services:
+  postgres-app:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: fisiofino_app
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - app-data:/var/lib/postgresql/data
+      # Crea les taules la primera vegada que es crea la BD (volum buit)
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+
+  postgres-test:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: fisiofino_test
+      POSTGRES_USER: fisiofino
+      POSTGRES_PASSWORD: fisiofino
+    ports:
+      - "5433:5432"
+    volumes:
+      # Crea les taules cada vegada que s'arrenca (no té volum de dades)
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+
+volumes:
+  app-data:
